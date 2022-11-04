@@ -1,4 +1,4 @@
-module aquascape_backend
+module github.com/luisjulian3/aquascape_mobile_backend
 
 go 1.19
 

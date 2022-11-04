@@ -1,7 +1,7 @@
 package main
 
 import (
-	"aquascape_backend/services"
+	"github.com/luisjulian3/aquascape_mobile_backend/services"
 )
 
 func main() {

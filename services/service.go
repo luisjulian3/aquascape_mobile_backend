@@ -1,10 +1,10 @@
 package service
 
 import (
-	"aquascape_backend/models"
 	"encoding/json"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/luisjulian3/aquascape_mobile_backend/models"
 	"io/ioutil"
 	http "net/http"
 	"strings"
