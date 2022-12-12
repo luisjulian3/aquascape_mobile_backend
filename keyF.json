@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "aquascape-mobile",
+  "private_key_id": "d58c019f7ab31ec8a75b86f7f7e4b8d087585cb1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3xb5V8bH29F5X\nbAKpyclROl379s04styhVLNHnpSlcvj4bv4DXM1xYew+6PpmiI2oj5X2JeMJWlpb\nThELnuMgGh9HAuHWCLhPhH/WN3rW0WxtkDVuBz6QsHYogujhQHNKxWIZxQbnHLKc\nHx4ll/s21RQmqHRyEgja81WljIcVH7TgwrxnJOb6FfMP2dzlWBcw9v9B4X8ICrKj\nITpYVUpbqyOOkOCtSVSW9BsjwEkXI0b8N0297YLVZAGt+2OO5nB1FTyVn87cthe5\nfqvcuc9rJXN0eEMGaYwr9oXooFcMUo08xsQQXG6/O3ZpLg+Y8s8AWeusQrhPb266\nnKk+fPj1AgMBAAECggEAUQqWHkaAybwIIptSLVf8PKL1sVisNbXC0C6PBSVsve2O\n19fykr8JJlgdm7yYOEE93zi61BrvHT/IGv25TJub45tBccpWl1GvHfn7ehdrR3KB\nU2vF9CijsaDv6nuYgUUv0qhq05xsp9yi83BRlhiIwyyCP24INAm59/xZJ7FqHKjn\n7PDuxI8ZJztciZMxEmMvVsSHEyvYmJGCkMnxVHs5z4LrYkaoV1Iw4frlQbkoAwb6\nSuwg+XGpBJdTgyX6wuAm5pILGJmMMn8KvK65o2GxC54bv8x0/H5TBx4N5UpRDdf2\nOQOs84ztINxjbxA2rRvSbU6FqD95kF21feWCPiJ0fQKBgQDq5DgY3uPrVyYc/o+q\nsEUFgFMVNnznwtTwfDGiXx2qQZgQfHpDxh+WN/3i1W+1w7sSqZKqHdKuMCAiPeH/\nfTwpFdC8OAelmWphNyCgrOYlnsRUipffZZD73kjnlCm0cH5mem+Ge0I/Npr3/PgK\njKkn5/2IQL8A/RTmasumRDAthwKBgQDISYIqGJET9QbQwN89sxw2ehqVe0SZNySQ\nbjOTjv1EeFC3jwlUXc8U/Xc239PTAMpLCQEZGgbzGLcIUAMETu98qcw934GjNUoX\nAkLrDvzpDuZ42RACwC6jsHW+QmQ+SJdyuVwfHAjc1H+caUqCmtUPr+12TpDjrJqF\nzLY3KY8kowKBgQC/cP4flxof50mS/A7PyRaYIzyT33Lx2aN/1VkGw4sEBq4PUcS8\nlC+OWVg9lkOT21EPJtH4gJIDkgm+nr0hZEqyGaukm+3vlBhV335iNkjlhH7zgHnD\ng54lCchVpjZPcBg1Ibjf3Hnj13d6gt0OjBIaCkRi1pJWFe8A1S3h91Vk5QKBgBnp\noMSPfx2k4ufZPEjARpMpwwy58QsdnkZta5DYvB3CrzbAc8WNiYA+ttDLrp0rCgEh\nPhogSuvis7OInotNJyDq2vjaVOxntZk6eqvsuX3xppHWC4M/mAkniGRANLX2MFnw\nb2G6/86KU6RJ3xD8tTodWcynp4k9SJStApoqb1GfAoGABHwkUjobHSkn9p5j6Py9\nepS2VXbnqaAhBrEOscAiS9mJUewtYQZ0bFNpbc0jgVUHEEmI69rYKGriWsf69bgO\nuqDrf8Fc36tCHaQYTi2/HCIWuqTzR1JdWKCB1YgzJt4XIdSmXwBH1T2E9xwm9cHI\n1pW4DyOoxWrhMIlLqZ2xo34=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-oha6t@aquascape-mobile.iam.gserviceaccount.com",
+  "client_id": "102784614523224924559",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-oha6t%40aquascape-mobile.iam.gserviceaccount.com"
+}
