@@ -1,15 +1,16 @@
 package service
 
 import (
+	"cloud.google.com/go/firestore"
 	"encoding/json"
 	firebase "firebase.google.com/go/v4"
-	"firebase.google.com/go/v4/auth"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"github.com/luisjulian3/aquascape_mobile_backend/models"
 	"golang.org/x/net/context"
+	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"io/ioutil"
 	http "net/http"
@@ -44,41 +45,29 @@ func EchoHTTPService() {
 	e.PUT("/Fan/UpdateFanFalse", UpdateDataFanFalse())
 	e.PUT("/Lamp/UpdateLampTrue", UpdateDataLampTrue())
 	e.PUT("/Lamp/UpdateLampFalse", UpdateDataLampFalse())
+
+	//Sensor Post Data using params
 	e.GET("/sensor/postsensor", PostSensor())
-	// e.POST("url", func(s))
-	// e.DELETE("url", func(s))
 
-	// run actual server
+	//Fan - > FireStore hit
+	e.GET("/fan", GetFan())
+	e.GET("/fan/true", PostFanTrue())
+	e.GET("/fan/false", PostFanFalse())
+
+	//Lamp - > FireStore hit
+	e.GET("/lamp", GetLamp())
+	e.GET("/lamp/true", PostLampTrue())
+	e.GET("/lamp/false", PostLampFalse())
+
+	//Temp - > FireStore
+	e.GET("/temp/data", GetTempData()) // 1 data
+	e.GET("/temp/real", GetTempReal()) //RealTimeData
+
+	//PHScale - > Firestore
+	e.GET("/phscale/data", GetPHScaleData()) //1 data
+	e.GET("/phscale/real", GetPHScaleReal()) //RealTimeData
+
 	e.Logger.Fatal(e.Start(":8080"))
-}
-
-/*func initializeAppWithServiceAccount() *firebase.App {
-	opt := option.WithCredentialsFile("/serviceAccountKey.json")
-	app, err := firebase.NewApp(context.Background(), nil, opt)
-	log.Printf("test123")
-	if err != nil {
-		log.Fatalf("error initializing app: %v\n", err)
-	}
-	return app
-}*/
-
-func getUser(ctx context.Context, app *firebase.App) *auth.UserRecord {
-	uid := "some_string_uid"
-
-	// [START get_user]
-	// Get an auth client from the firebase.App
-	client, err := app.Auth(context.Background())
-	if err != nil {
-		log.Fatalf("error getting Auth client: %v\n", err)
-	}
-
-	u, err := client.GetUser(ctx, uid)
-	if err != nil {
-		log.Fatalf("error getting user %s: %v\n", uid, err)
-	}
-	log.Printf("Successfully fetched user data: %v\n", u)
-	// [END get_user]
-	return u
 }
 
 func GetDataPHScale() echo.HandlerFunc {
@@ -353,5 +342,331 @@ func PostSensor() echo.HandlerFunc {
 		fmt.Printf("Document data: %#v\n", postdatasensor)
 
 		return c.JSON(http.StatusOK, postdatasensor)
+	}
+}
+
+func PostLampTrue() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		postdatalamp, err := client.Collection("device").Doc("devices").Set(ctx, map[string]interface{}{
+			"lamp": true,
+		}, firestore.MergeAll)
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		fmt.Printf("Document data: %#v\n", postdatalamp)
+
+		return c.JSON(http.StatusOK, postdatalamp)
+	}
+}
+
+func PostLampFalse() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		postdatalamp, err := client.Collection("device").Doc("devices").Set(ctx, map[string]interface{}{
+			"lamp": false,
+		}, firestore.MergeAll)
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		fmt.Printf("Document data: %#v\n", postdatalamp)
+
+		return c.JSON(http.StatusOK, postdatalamp)
+	}
+}
+
+func PostFanFalse() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		postdatalamp, err := client.Collection("device").Doc("devices").Set(ctx, map[string]interface{}{
+			"fan": false,
+		}, firestore.MergeAll)
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		fmt.Printf("Document data: %#v\n", postdatalamp)
+
+		return c.JSON(http.StatusOK, postdatalamp)
+	}
+}
+
+func PostFanTrue() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		postdatalamp, err := client.Collection("device").Doc("devices").Set(ctx, map[string]interface{}{
+			"fan": true,
+		}, firestore.MergeAll)
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		fmt.Printf("Document data: %#v\n", postdatalamp)
+
+		return c.JSON(http.StatusOK, postdatalamp)
+	}
+}
+
+func GetTempData() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		iter := client.Collection("sensor").Documents(ctx)
+
+		var test []string
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return err
+			}
+			data := doc.Data()["temp"]
+			test = append(test, fmt.Sprintf("%v", data))
+		}
+		return c.JSON(http.StatusOK, test)
+	}
+}
+
+func GetPHScaleData() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		iter := client.Collection("sensor").Documents(ctx)
+
+		var test []string
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return err
+			}
+			data := doc.Data()["phscale"]
+			test = append(test, fmt.Sprintf("%v", data))
+		}
+		return c.JSON(http.StatusOK, test)
+	}
+}
+
+func GetTempReal() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		iter := client.Collection("sensor").OrderBy("temp", firestore.Asc).Documents(ctx)
+
+		var test []string
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return err
+			}
+			data := doc.Data()["temp"]
+			test = append(test, fmt.Sprintf("%v", data))
+		}
+
+		return c.JSON(http.StatusOK, test[len(test)-1])
+	}
+}
+
+func GetPHScaleReal() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		iter := client.Collection("sensor").OrderBy("phscale", firestore.Asc).Documents(ctx)
+
+		var test []string
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return err
+			}
+			data := doc.Data()["phscale"]
+			test = append(test, fmt.Sprintf("%v", data))
+
+		}
+		return c.JSON(http.StatusOK, test[len(test)-1])
+	}
+}
+
+func GetFan() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		dsnap, err := client.Collection("device").Doc("devices").Get(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		m := dsnap.Data()["fan"]
+		fmt.Printf("Document data: %#v\n", m)
+
+		return c.JSON(http.StatusOK, m)
+	}
+}
+
+func GetLamp() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		dsnap, err := client.Collection("device").Doc("devices").Get(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		m := dsnap.Data()["lamp"]
+		fmt.Printf("Document data: %#v\n", m)
+
+		return c.JSON(http.StatusOK, m)
 	}
 }
