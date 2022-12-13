@@ -502,8 +502,9 @@ func GetTempData() echo.HandlerFunc {
 
 		iter := client.Collection("sensor").Documents(ctx)
 
-		var test []string
+		var results []models.NewResultDataPH
 		for {
+			var result models.NewResultDataPH
 			doc, err := iter.Next()
 			if err == iterator.Done {
 				break
@@ -512,9 +513,13 @@ func GetTempData() echo.HandlerFunc {
 				return err
 			}
 			data := doc.Data()["temp"]
-			test = append(test, fmt.Sprintf("%v", data))
+			time := doc.Data()["time"]
+
+			result.Time = fmt.Sprintf("%v", time)
+			result.Value = fmt.Sprintf("%v", data)
+			results = append(results, result)
 		}
-		return c.JSON(http.StatusOK, test)
+		return c.JSON(http.StatusOK, results)
 	}
 }
 
@@ -522,7 +527,6 @@ func GetPHScaleData() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := context.Background()
 		sa := option.WithCredentialsFile("keyF.json")
-		//conf := &config.Config{ProjectID: "aquascape-mobile"}
 		app, err := firebase.NewApp(ctx, nil, sa)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, err.Error())
@@ -535,8 +539,9 @@ func GetPHScaleData() echo.HandlerFunc {
 
 		iter := client.Collection("sensor").Documents(ctx)
 
-		var test []string
+		var results []models.NewResultDataPH
 		for {
+			var result models.NewResultDataPH
 			doc, err := iter.Next()
 			if err == iterator.Done {
 				break
@@ -545,9 +550,13 @@ func GetPHScaleData() echo.HandlerFunc {
 				return err
 			}
 			data := doc.Data()["phscale"]
-			test = append(test, fmt.Sprintf("%v", data))
+			time := doc.Data()["time"]
+
+			result.Time = fmt.Sprintf("%v", time)
+			result.Value = fmt.Sprintf("%v", data)
+			results = append(results, result)
 		}
-		return c.JSON(http.StatusOK, test)
+		return c.JSON(http.StatusOK, results)
 	}
 }
 
@@ -615,6 +624,7 @@ func GetPHScaleReal() echo.HandlerFunc {
 			test = append(test, fmt.Sprintf("%v", data))
 
 		}
+		//test = json.Unmarshal([]byte(dataPhscale{}), test)
 		return c.JSON(http.StatusOK, test[len(test)-1])
 	}
 }

@@ -30,3 +30,12 @@ type JwtClaims struct {
 	Name string `json:"name"`
 	jwt.StandardClaims
 }
+
+type NewResultDataPH struct {
+	Time  string `json:"time"`
+	Value string `json:"value"`
+}
+type NewResultDataTemp struct {
+	Time  string `json:"time"`
+	Value string `json:"value"`
+}
