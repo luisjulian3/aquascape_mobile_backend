@@ -516,9 +516,9 @@ func GetTempData() echo.HandlerFunc {
 				return err
 			}
 			data := doc.Data()["temp"]
-			//time := doc.Data()["time"]
+			time := doc.Data()["time"]
 
-			//result.Time = fmt.Sprintf("%v", time)
+			result.Time = fmt.Sprintf("%v", time)
 			result.Value = fmt.Sprintf("%v", data)
 			results = append(results, result)
 		}
@@ -553,9 +553,9 @@ func GetPHScaleData() echo.HandlerFunc {
 				return err
 			}
 			data := doc.Data()["phscale"]
-			//time := doc.Data()["time"]
+			time := doc.Data()["time"]
 
-			//result.Time = fmt.Sprintf("%v", time)
+			result.Time = fmt.Sprintf("%v", time)
 			result.Value = fmt.Sprintf("%v", data)
 			results = append(results, result)
 		}
