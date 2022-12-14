@@ -48,6 +48,7 @@ func EchoHTTPService() {
 
 	//Sensor Post Data using params
 	e.POST("/sensor/postsensor", PostSensor())
+	e.GET("/sensor/postsensor", PostSensor())
 
 	//Fan - > FireStore hit
 	e.GET("/fan", GetFan())
