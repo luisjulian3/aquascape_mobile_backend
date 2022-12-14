@@ -32,10 +32,10 @@ type JwtClaims struct {
 }
 
 type NewResultDataPH struct {
-	Time  string `json:"time"`
+	//Time  string `json:"time"`
 	Value string `json:"value"`
 }
 type NewResultDataTemp struct {
-	Time  string `json:"time"`
+	//Time  string `json:"time"`
 	Value string `json:"value"`
 }

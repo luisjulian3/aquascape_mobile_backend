@@ -47,7 +47,7 @@ func EchoHTTPService() {
 	e.PUT("/Lamp/UpdateLampFalse", UpdateDataLampFalse())
 
 	//Sensor Post Data using params
-	e.GET("/sensor/postsensor", PostSensor())
+	e.POST("/sensor/postsensor", PostSensor())
 
 	//Fan - > FireStore hit
 	e.GET("/fan", GetFan())
@@ -337,11 +337,14 @@ func PostSensor() echo.HandlerFunc {
 		if err != nil {
 			// Handle any errors in an appropriate way, such as returning them.
 			log.Printf("An error has occurred: %s", err)
+
+			//fmt.Println(postdatasensor)
 		}
 
 		fmt.Printf("Document data: %#v\n", postdatasensor)
 
 		return c.JSON(http.StatusOK, postdatasensor)
+
 	}
 }
 
@@ -513,9 +516,9 @@ func GetTempData() echo.HandlerFunc {
 				return err
 			}
 			data := doc.Data()["temp"]
-			time := doc.Data()["time"]
+			//time := doc.Data()["time"]
 
-			result.Time = fmt.Sprintf("%v", time)
+			//result.Time = fmt.Sprintf("%v", time)
 			result.Value = fmt.Sprintf("%v", data)
 			results = append(results, result)
 		}
@@ -550,9 +553,9 @@ func GetPHScaleData() echo.HandlerFunc {
 				return err
 			}
 			data := doc.Data()["phscale"]
-			time := doc.Data()["time"]
+			//time := doc.Data()["time"]
 
-			result.Time = fmt.Sprintf("%v", time)
+			//result.Time = fmt.Sprintf("%v", time)
 			result.Value = fmt.Sprintf("%v", data)
 			results = append(results, result)
 		}
