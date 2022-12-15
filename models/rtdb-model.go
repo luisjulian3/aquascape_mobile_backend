@@ -39,3 +39,8 @@ type NewResultDataTemp struct {
 	Time  string `json:"time"`
 	Value string `json:"value"`
 }
+
+type Sensor struct {
+	Temp    float64 `json:"Temp"`
+	PHScale float64 `json:"PHScale"`
+}

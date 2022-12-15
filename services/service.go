@@ -37,6 +37,8 @@ func EchoHTTPService() {
 
 	// routes
 
+	//e.Use(ServerHeader)
+
 	e.GET("/PHScale", GetDataPHScale())
 	e.GET("/Temp", GetDataTemp())
 	e.GET("/Fan", GetDataFan())
@@ -67,6 +69,9 @@ func EchoHTTPService() {
 	//PHScale - > Firestore
 	e.GET("/phscale/data", GetPHScaleData()) //1 data
 	e.GET("/phscale/real", GetPHScaleReal()) //RealTimeData
+
+	//test
+	e.POST("/test11", testing())
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -364,8 +369,8 @@ func PostLampTrue() echo.HandlerFunc {
 		}
 		defer client.Close()
 
-		postdatalamp, err := client.Collection("device").Doc("devices").Set(ctx, map[string]interface{}{
-			"lamp": true,
+		postdatalamp, err := client.Collection("device").Doc("lamp").Set(ctx, map[string]interface{}{
+			"status": true,
 		}, firestore.MergeAll)
 
 		if err != nil {
@@ -399,8 +404,8 @@ func PostLampFalse() echo.HandlerFunc {
 		}
 		defer client.Close()
 
-		postdatalamp, err := client.Collection("device").Doc("devices").Set(ctx, map[string]interface{}{
-			"lamp": false,
+		postdatalamp, err := client.Collection("device").Doc("lamp").Set(ctx, map[string]interface{}{
+			"status": false,
 		}, firestore.MergeAll)
 
 		if err != nil {
@@ -434,8 +439,8 @@ func PostFanFalse() echo.HandlerFunc {
 		}
 		defer client.Close()
 
-		postdatalamp, err := client.Collection("device").Doc("devices").Set(ctx, map[string]interface{}{
-			"fan": false,
+		postdatalamp, err := client.Collection("device").Doc("fan").Set(ctx, map[string]interface{}{
+			"status": false,
 		}, firestore.MergeAll)
 
 		if err != nil {
@@ -454,8 +459,12 @@ func PostFanFalse() echo.HandlerFunc {
 	}
 }
 
-func PostFanTrue() echo.HandlerFunc {
+// ----------
+// Handlers
+// ----------
+func testing() echo.HandlerFunc {
 	return func(c echo.Context) error {
+
 		ctx := context.Background()
 		sa := option.WithCredentialsFile("keyF.json")
 		//conf := &config.Config{ProjectID: "aquascape-mobile"}
@@ -469,23 +478,14 @@ func PostFanTrue() echo.HandlerFunc {
 		}
 		defer client.Close()
 
-		postdatalamp, err := client.Collection("device").Doc("devices").Set(ctx, map[string]interface{}{
-			"fan": true,
-		}, firestore.MergeAll)
-
-		if err != nil {
-			// Handle any errors in an appropriate way, such as returning them.
-			log.Printf("An error has occurred: %s", err)
+		u := &models.Sensor{}
+		if err := c.Bind(u); err != nil {
+			return err
 		}
 
-		if err != nil {
-			// Handle any errors in an appropriate way, such as returning them.
-			log.Printf("An error has occurred: %s", err)
-		}
+		postdatasensor, _, err := client.Collection("test").Add(ctx, u)
 
-		fmt.Printf("Document data: %#v\n", postdatalamp)
-
-		return c.JSON(http.StatusOK, postdatalamp)
+		return c.JSON(http.StatusCreated, postdatasensor)
 	}
 }
 
@@ -648,11 +648,11 @@ func GetFan() echo.HandlerFunc {
 		}
 		defer client.Close()
 
-		dsnap, err := client.Collection("device").Doc("devices").Get(ctx)
+		dsnap, err := client.Collection("device").Doc("fan").Get(ctx)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, err.Error())
 		}
-		m := dsnap.Data()["fan"]
+		m := dsnap.Data()
 		fmt.Printf("Document data: %#v\n", m)
 
 		return c.JSON(http.StatusOK, m)
@@ -674,13 +674,55 @@ func GetLamp() echo.HandlerFunc {
 		}
 		defer client.Close()
 
-		dsnap, err := client.Collection("device").Doc("devices").Get(ctx)
+		dsnap, err := client.Collection("device").Doc("lamp").Get(ctx)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, err.Error())
 		}
-		m := dsnap.Data()["lamp"]
+		m := dsnap.Data()
 		fmt.Printf("Document data: %#v\n", m)
 
 		return c.JSON(http.StatusOK, m)
 	}
 }
+
+func PostFanTrue() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		sa := option.WithCredentialsFile("keyF.json")
+		//conf := &config.Config{ProjectID: "aquascape-mobile"}
+		app, err := firebase.NewApp(ctx, nil, sa)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		defer client.Close()
+
+		postdatalamp, err := client.Collection("device").Doc("fan").Set(ctx, map[string]interface{}{
+			"status": true,
+		}, firestore.MergeAll)
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		if err != nil {
+			// Handle any errors in an appropriate way, such as returning them.
+			log.Printf("An error has occurred: %s", err)
+		}
+
+		fmt.Printf("Document data: %#v\n", postdatalamp)
+
+		return c.JSON(http.StatusOK, postdatalamp)
+	}
+}
+
+/*func ServerHeader(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		c.Response().Header().Set(echo.HeaderServer, "Echo/3.0")
+		return next(c)
+	}
+}*/
